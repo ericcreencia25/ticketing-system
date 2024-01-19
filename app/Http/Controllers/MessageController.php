@@ -19,10 +19,12 @@ class MessageController extends Controller
     public function sendMessage(Request $request)
     {
         $now = new \DateTime();
-        $lastData = DB::table('concerns')->select('id')->orderBy('id', 'DESC')->first();
-        $lastId = isset($lastData) ? $lastData->id + 1 :  $lastData + 1 ;
 
-        $tix = 'Tix-' . $now->format('Y') . '-' . $lastId;
+        $data = DB::table('concerns')
+        ->orderBy('id', 'DESC')
+        ->first();
+
+        $tix = 'Tix-' . $now->format('Y-m') . "-" . str_pad($data->id + 1, 8, "0", STR_PAD_LEFT);
 
         $data = DB::table('concerns')->insert([
             'ticket_number' => $tix,
