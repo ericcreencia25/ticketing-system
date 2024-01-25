@@ -8,7 +8,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>EMB | Support Service Ticketing System</title>
+  <title>EMB | Contact Us</title>
 
   <link rel="icon" href="../../AdminLTE-3.2.0/dist/img/denr-emb-logo.gif">
   <!-- Google Font: Source Sans Pro -->
@@ -21,8 +21,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
   <!-- dropzonejs -->
   <link rel="stylesheet" href="../../AdminLTE-3.2.0/plugins/dropzone/min/dropzone.min.css">
-
-  {!! ReCaptcha::htmlScriptTagJsApi()!!}
 </head>
 <style>
   .contact {
@@ -111,7 +109,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <div class="container">
       <a href="../../AdminLTE-3.2.0/index3.html" class="navbar-brand">
         <img src="../../AdminLTE-3.2.0/dist/img/emb-logo.jpg" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-light">Support Service Ticketing System | </span>
+        <span class="brand-text font-light">EMB | Support Ticketing</span>
       </a>
 
       <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -182,43 +180,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                 <div class="col-md-7">
                   <div class="card">
-                    @if(session()->get('success'))
-                    <div class="alert alert-success alert-dismissible">
-                      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                      <h4><i class="icon fa fa-check"></i> Sent!</h4>
-                      We've already sent you an email. You will find the ticket number inside the email. Thank you!
-                      <br>
-                    </div>
-                    @endif
-
                     <div class="card-body">
-                      <form class="form-horizontal" method="POST" action="{{ route('/send-message') }}">
-                        @csrf
                           <div class="row">
                               <div class="col-sm-6">
                                  <label for="company-name">Company Name</label>
-                                  <!-- <span class="text-danger" id="company-name-error" hidden></span> -->
-                                  @error('company-name')
-                                    <p class="text-red">{{ $message }}</p>
-                                  @enderror
-                                  <input type="text" id="company-name" name="company-name" class="form-control" required />
+                                  <span class="text-danger" id="company-name-error" hidden></span>
+                                  <input type="text" id="company-name" class="form-control" required />
                               </div>
                               <div class="col-sm-6">
                                   <label for="client-name">Client Name</label>
-                                  <!-- <span class="text-danger" id="client-name-error" hidden></span> -->
-                                  @error('client-name')
-                                    <p class="text-red">{{ $message }}</p>
-                                  @enderror
-                                  <input type="text" id="client-name" name="client-name" class="form-control" required />
+                                  <span class="text-danger" id="client-name-error" hidden></span>
+                                  <input type="text" id="client-name" class="form-control" required />
                               </div>
 
                               <div class="col-6">
                                   <label for="online-system">Online System</label>
-                                  <!-- <span class="text-danger" id="online-system-error" hidden></span> -->
-                                  @error('online-system')
-                                    <p class="text-red">{{ $message }}</p>
-                                  @enderror
-                                  <select id="online-system" name="online-system"  class="form-control custom-select" required>
+                                  <span class="text-danger" id="online-system-error" hidden></span>
+                                  <select id="online-system" class="form-control custom-select" required>
                                       <option selected="" disabled="" value="">Select one</option>
                                       <option value="ECC">ECC</option>
                                       <option value="CNC">CNC</option>
@@ -234,38 +212,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                               <div class="col-6">
                                   <label for="e-mail">Email</label>
-                                  <!-- <span class="text-danger" id="e-mail-error" hidden></span> -->
-                                  @error('e-mail')
-                                    <p class="text-red">{{ $message }}</p>
-                                  @enderror
-                                  <input type="email" id="e-mail" name="e-mail" class="form-control" required/>
+                                  <span class="text-danger" id="e-mail-error" hidden></span>
+                                  <input type="email" id="e-mail" class="form-control" required/>
                               </div>
 
                               <div class="col-12">
                                   <label for="subject">Subject</label>
-                                  <!-- <span class="text-danger" id="subject-error" hidden></span> -->
-                                  @error('subject')
-                                    <p class="text-red">{{ $message }}</p>
-                                  @enderror
-                                  <input type="text" id="subject" name="subject" class="form-control" required/>
+                                  <span class="text-danger" id="subject-error" hidden></span>
+                                  <input type="text" id="subject" class="form-control" placeholder="Subject" required/>
                               </div>
 
                               <div class="col-12">
                                 <label for="subject">Message</label>
-                                <!-- <span class="text-danger" id="message-error" hidden></span> -->
-                                @error('message')
-                                    <p class="text-red">{{ $message }}</p>
-                                  @enderror
-                                <textarea class="form-control" rows="5" id="message" name="message" required></textarea>
-                              </div>
-
-                              <div class="col-12">
-                                {!! NoCaptcha::renderJs() !!}
-                                {!! NoCaptcha::display() !!}
-
-                                @error('g-recaptcha-response')
-                                  <p class="text-red">{{ $message }}</p>
-                                @enderror
+                                <span class="text-danger" id="message-error" hidden></span>
+                                <textarea class="form-control" rows="5" id="message" placeholder="Message" required></textarea>
                               </div>
 
                               <!-- <div class="col-12">
@@ -331,9 +291,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 </div>
                               </div> -->
                           </div>
-                          <button class="btn btn-block" type="submit" id="btn-send" >Send Now <i class="fa-solid fa-paper-plane"></i></button>
-                        </form>
                           
+                          <button class="btn btn-block" type="button" id="btn-send" >Send Now <i class="fa-solid fa-paper-plane"></i></button>
                     </div>
                   </div>
                 </div>
@@ -370,117 +329,116 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- dropzonejs -->
 <script src="../../AdminLTE-3.2.0/plugins/dropzone/min/dropzone.min.js"></script>
 
-
-<script src="https://www.google.com/recaptcha/api.js?render=6LdFlVopAAAAAGsNwyWp54ML8GK46Yrg1VbUtMs3" async defer></script>
+<script src="https://www.google.com/recaptcha/api.js?onload=CaptchaCallback&render=explicit" async defer></script>
 
 <script>
 
   $(function () {
 
-    // $("#btn-send").on('click', function() {
+    $("#btn-send").on('click', function() {
 
-    //   const arr = [];
+      const arr = [];
 
-    //   if($("#company-name").val() == ''){
-    //     arr.push("Company Name");
-    //     $("#company-name-error").removeAttr('hidden');
-    //     $("#company-name-error").text('*this field is required');
-    //   } else {
-    //     $("#company-name-error").attr('hidden', 'hidden');
-    //   }
+      if($("#company-name").val() == ''){
+        arr.push("Company Name");
+        $("#company-name-error").removeAttr('hidden');
+        $("#company-name-error").text('*this field is required');
+      } else {
+        $("#company-name-error").attr('hidden', 'hidden');
+      }
 
-    //   if($("#client-name").val() == ''){
-    //     arr.push("Client Name");
-    //     $("#client-name-error").removeAttr('hidden');
-    //     $("#client-name-error").text('*this field is required');
-    //   } else {
-    //     $("#client-name-error").attr('hidden', 'hidden');
-    //   }
+      if($("#client-name").val() == ''){
+        arr.push("Client Name");
+        $("#client-name-error").removeAttr('hidden');
+        $("#client-name-error").text('*this field is required');
+      } else {
+        $("#client-name-error").attr('hidden', 'hidden');
+      }
 
-    //   if($("#e-mail").val() == ''){
-    //     arr.push("Email");
-    //     $("#e-mail-error").removeAttr('hidden');
-    //     $("#e-mail-error").text('*this field is required');
-    //   } else {
-    //     $("#e-mail-error").attr('hidden', 'hidden');
-    //   }
+      if($("#e-mail").val() == ''){
+        arr.push("Email");
+        $("#e-mail-error").removeAttr('hidden');
+        $("#e-mail-error").text('*this field is required');
+      } else {
+        $("#e-mail-error").attr('hidden', 'hidden');
+      }
 
-    //   if($("#online-system").val() == '' || $("#online-system").val() == null){
-    //     arr.push("Online System");
-    //     $("#online-system-error").removeAttr('hidden');
-    //     $("#online-system-error").text('*this field is required');
-    //   } else {
-    //     $("#online-system-error").attr('hidden', 'hidden');
-    //   }
+      if($("#online-system").val() == '' || $("#online-system").val() == null){
+        arr.push("Online System");
+        $("#online-system-error").removeAttr('hidden');
+        $("#online-system-error").text('*this field is required');
+      } else {
+        $("#online-system-error").attr('hidden', 'hidden');
+      }
 
-    //   if($("#subject").val() == ''){
-    //     arr.push("Subject");
-    //     $("#subject-error").removeAttr('hidden');
-    //     $("#subject-error").text('*this field is required');
-    //   } else {
-    //     $("#subject-error").attr('hidden', 'hidden');
-    //   }
+      if($("#subject").val() == ''){
+        arr.push("Subject");
+        $("#subject-error").removeAttr('hidden');
+        $("#subject-error").text('*this field is required');
+      } else {
+        $("#subject-error").attr('hidden', 'hidden');
+      }
 
-    //   if($("#message").val() == ''){
-    //     arr.push("Message");
-    //     $("#message-error").removeAttr('hidden');
-    //     $("#message-error").text('*this field is required');
-    //   } else {
-    //     $("#message-error").attr('hidden', 'hidden');
-    //   }
+      if($("#message").val() == ''){
+        arr.push("Message");
+        $("#message-error").removeAttr('hidden');
+        $("#message-error").text('*this field is required');
+      } else {
+        $("#message-error").attr('hidden', 'hidden');
+      }
 
-    //   console.log($("#online-system").val());
+      console.log($("#online-system").val());
 
-    //   if(arr.length == 0) {
+      if(arr.length == 0) {
 
-    //     $.ajax({
-    //       url: "{{route('/send-message')}}",
-    //       type: 'POST',
-    //       data: {
-    //         'company-name': $("#company-name").val(),
-    //         'client-name': $("#client-name").val(),
-    //         'e-mail': $("#e-mail").val(),
-    //         'online-system': $("#online-system").val(),
-    //         'subject': $("#subject").val(),
-    //         'message': $("#message").val(),
-    //         _token: '{{csrf_token()}}',
-    //       },
-    //       beforeSend: function () {
+        $.ajax({
+          url: "{{route('/send-message')}}",
+          type: 'POST',
+          data: {
+            'company-name': $("#company-name").val(),
+            'client-name': $("#client-name").val(),
+            'e-mail': $("#e-mail").val(),
+            'online-system': $("#online-system").val(),
+            'subject': $("#subject").val(),
+            'message': $("#message").val(),
+            _token: '{{csrf_token()}}',
+          },
+          beforeSend: function () {
 
-    //         // $('.loading-overlay').show();
-    //         // $('.loading-overlay-image-container').show();
-    //       },
-    //       complete: function () {
+            // $('.loading-overlay').show();
+            // $('.loading-overlay-image-container').show();
+          },
+          complete: function () {
 
-    //         // $('.loading-overlay').hide();
-    //         // $('.loading-overlay-image-container').hide();
+            // $('.loading-overlay').hide();
+            // $('.loading-overlay-image-container').hide();
 
-    //       },
-    //       success: function (response) {
+          },
+          success: function (response) {
 
-    //         Swal.fire({
-    //             position: "center",
-    //             icon: "success",
-    //             title: "Sent! We've already sent you an email. You will find the ticket number inside the email. Thank you",
-    //             showConfirmButton: false,
-    //             timer: 5500,
-    //             timerProgressBar: true,
-    //             didOpen: (toast) => {
-    //               toast.addEventListener('mouseenter', Swal.stopTimer)
-    //               toast.addEventListener('mouseleave', Swal.resumeTimer)
-    //             },
-    //             didClose: (toast) => {
-    //               location.reload();
-    //             }
-    //         });
-    //       }
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Sent! We've already sent you an email. You will find the ticket number inside the email. Thank you",
+                showConfirmButton: false,
+                timer: 5500,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer)
+                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                },
+                didClose: (toast) => {
+                  location.reload();
+                }
+            });
+          }
 
-    //     });
+        });
 
-    //   }
+      }
 
       
-    // });
+    });
 
   });
 

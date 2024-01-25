@@ -24,7 +24,7 @@
                             <th>Name</th>
                             <th>User Type</th>
                             <th>Email</th>
-                            <!-- <th>Online System</th> -->
+                            <th>Last Activity</th>
                             <th>Action</th>
                         </thead>
                     </table>
@@ -298,6 +298,10 @@
           {
             data: 'email',
             name: 'email',
+          },
+          {
+            data: 'last_activity',
+            name: 'last_activity',
           },
           {
             data: 'action',

@@ -7,12 +7,13 @@
       white-space: nowrap;
     }
 </style>
+<link rel="stylesheet" href="../../AdminLTE-3.2.0/dist/css/bootstrap-side-modals.css">
 @section('content')
 <!-- <div class="container"> -->
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
+                <div class="card-header">{{ __('Ticket Management') }}</div>
     
                 <div class="card-body">
                     <table class="table" id="concern-list">
@@ -24,6 +25,7 @@
                             <th>System</th>
                             <th>Subject</th>
                             <th>Message</th>
+                            <th>Status</th>
                             <th>Date</th>
                             <th>Action taken</th>
                             <th>Resolved Date</th>
@@ -36,7 +38,7 @@
     </div>
 <!-- </div> -->
 
-<div class="modal fade" id="modal-view-ticket">
+<!-- <div class="modal fade" id="modal-view-ticket">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
@@ -50,8 +52,6 @@
       <div class="modal-body">
 
         <div class="card-body">
-            <!-- <div class="card"> -->
-                <!-- <div class="card-body row"> -->
                     <input id="ticket-id" hidden />
                   <div class="col-12">
                     <div class="row">
@@ -111,10 +111,91 @@
                       <button type="submit" class="btn btn-warning" id="btn-resolve">Submit <i class="fa-solid fa-paper-plane"></i></button>
                     </div>
                   </div>
-                <!-- </div> -->
-              <!-- </div> -->
 
         </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div class="modal modal-right fade" id="right_modal_lg" tabindex="-1" role="dialog" aria-labelledby="right_modal_lg">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <!-- <div class="modal-header">
+        <h5 class="modal-title">Right Modal LG Title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div> -->
+      <div class="modal-header">
+        <i>
+            <h5 class="modal-title" id="ticket-number">
+            </h5>
+            <span id="badge-status-ticket"></span>
+        </i>
+        
+        <span class="time"><i class="fas fa-clock"></i> <small id="date-submitted"></small></span>
+      </div>
+      <div class="modal-body">
+        <input id="ticket-id" hidden />
+        <div class="col-12">
+            <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <small>
+                                    <label for="company-name">Company Name</label>
+                                    <input type="text" id="company-name" class="form-control" style="background: white;" readonly />
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <small>
+                                    <label for="client-name">Client Name</label>
+                                    <input type="text" id="client-name" class="form-control" style="background: white;" readonly/>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <small>
+                                    <label for="e-mail">E-Mail</label>
+                                    <input type="email" id="e-mail" class="form-control" style="background: white;" readonly />
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <small>
+                                    <label for="online-system">Online System</label>
+                                    <input type="email" id="online-system" class="form-control" style="background: white;" readonly />
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <small>
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" class="form-control" style="background: white;" readonly />
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <small>
+                            <label for="message">Message</label>
+                            <textarea id="message" class="form-control" rows="4" style="height: 300px; background: white;" readonly></textarea>
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <small>
+                            <label for="message">Action taken</label>
+                            <textarea id="action-taken" class="form-control" rows="4" style="height: 300px; background: white;"></textarea>
+                        </small>
+                    </div>
+                    <div class="form-group">
+                      <button type="submit" class="btn btn-warning" id="btn-resolve">Submit <i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                  </div>
       </div>
     </div>
   </div>
@@ -188,6 +269,10 @@
                 name: 'message',
             },
             {
+                data: 'status',
+                name: 'status',
+            },
+            {
                 data: 'created_date',
                 name: 'created_date',
             },
@@ -206,7 +291,7 @@
             ],
             'columnDefs' : [
                 //hide the second & fourth column
-                { 'visible': false, 'targets': [6, 8, 9] }
+                { 'visible': false, 'targets': [6, 9, 10] }
             ],
             dom: 'Bfrtip',
             buttons: [
@@ -286,6 +371,7 @@
 
             },
             success: function (result) {
+
                 $("#ticket-id").val(result['id']);
                 $("#ticket-number").html(result['ticket_number']);
                 $("#client-name").val(result['client_name']);
@@ -303,16 +389,23 @@
                     $("#btn-resolve").removeClass();
                     $("#btn-resolve").html('Resolved <i class="fa-solid fa-check"></i>');
                     $("#btn-resolve").addClass('btn btn-success');
+
+                    $("#badge-status-ticket").removeClass();
+                    $("#badge-status-ticket").html('Resolved');
+                    $("#badge-status-ticket").addClass('badge badge-success');
                 } else {
                     $("#btn-resolve").removeAttr('disabled');
                     $("#action-taken").removeAttr('readonly');
                     $("#btn-resolve").removeClass();
                     $("#btn-resolve").html('Submit <i class="fa-solid fa-paper-plane"></i>');
                     $("#btn-resolve").addClass('btn btn-primary');
+
+                    $("#badge-status-ticket").removeClass();
+                    $("#badge-status-ticket").html('Pending');
+                    $("#badge-status-ticket").addClass('badge badge-warning');
                 }
-
+                
             }
-
         });
 
         if(seen == 0) {
@@ -338,16 +431,14 @@
                 success: function (result) {
 
                     $("#view-concern-"+id).removeClass();
-                    $("#view-concern-"+id).addClass('btn btn-outline-secondary');
+                    $("#view-concern-"+id).addClass('btn btn-light border rounded-pill shadow-sm mb-1');
 
                 }
-
             });
-
         }
 
         
-
-        $("#modal-view-ticket").modal();
+        $("#right_modal_lg").modal();
+        // $("#modal-view-ticket").modal();
     }
 </script>

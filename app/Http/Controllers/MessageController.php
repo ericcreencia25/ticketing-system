@@ -15,16 +15,36 @@ use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
+    public function postSendMessage(Request $request)
+    {
+
+    }
 
     public function sendMessage(Request $request)
     {
         $now = new \DateTime();
 
+        $validator = $this->validate( $request, 
+            [
+                
+                'g-recaptcha-response' => 'required|captcha',
+                'company-name' => 'required',
+                'client-name' => 'required',
+                'online-system' => 'required',
+                'e-mail' => 'required|email',
+                'subject' => 'required',
+                'message' => 'required'
+                
+            ]
+        );
+
         $data = DB::table('concerns')
         ->orderBy('id', 'DESC')
         ->first();
 
-        $tix = 'Tix-' . $now->format('Y-m') . "-" . str_pad($data->id + 1, 8, "0", STR_PAD_LEFT);
+        $nextdata = isset($data) ? $data->id : 0;
+
+        $tix = 'TIX-' . $now->format('Y-m') . "-" . str_pad($nextdata + 1, 8, "0", STR_PAD_LEFT);
 
         $data = DB::table('concerns')->insert([
             'ticket_number' => $tix,
@@ -50,6 +70,7 @@ class MessageController extends Controller
                 'time' => $now->format('H:i:s')
             ]);
 
+            return redirect('contact-us')->with('success', $tix);
         }
     }
 
@@ -127,6 +148,16 @@ class MessageController extends Controller
                 $details = '<span id="span">' . $data->message . '</span>';
                 return $details;
             })
+            ->addColumn('status', function ($data) {
+                if($data->resolved == 1){
+                    $status = '<span class="badge badge-success">Resolved</span>';
+                } else {
+                    $status = '<span class="badge badge-warning">Pending</span>';
+
+                }
+                $details = '<span id="span">' . $status . '</span>';
+                return $details;
+            })
             ->addColumn('attachment', function ($data) {
                 $details = '<button type="button" class="btn btn-outline-secondary"><i class="fas fa-paperclip"></i></button>';
 
@@ -151,16 +182,16 @@ class MessageController extends Controller
                 </button>';
 
                 if($data->seen == 0) {
-                    $details = '<button type="button" class="btn btn-dark" title="view" onclick="view('.$data->id.', 0)" id="view-concern-'.$data->id.'" name="view-concern"><i class="fa-solid fa-arrow-right-to-bracket"></i></button>';
+                    $details = '<button type="button" class="btn btn-dark border rounded-pill shadow-sm mb-1" data-toggle="modal" data-target="#right_modal_lg" onclick="view('.$data->id.', 0)" id="view-concern-'.$data->id.'" name="view-concern"><i class="fa-solid fa-arrow-right-to-bracket"></i></button>';
                 } else {
-                    $details = '<button type="button" class="btn btn-outline-secondary" title="view" onclick="view('.$data->id.', 1)" id="view-concern-'.$data->id.'" name="view-concern"><i class="fa-solid fa-arrow-right-to-bracket"></i></button>';
+                    $details = '<button type="button" class="btn btn-light border rounded-pill shadow-sm mb-1" data-toggle="modal" data-target="#right_modal_lg" onclick="view('.$data->id.', 1)" id="view-concern-'.$data->id.'" name="view-concern"><i class="fa-solid fa-arrow-right-to-bracket"></i></button>';
                 }
                 
                 
 
                 return $details;
             })
-            ->rawColumns(['ticket_num', 'company_name', 'client_company', 'email', 'online_system', 'subject', 'message', 'action', 'attachment', 'created_date', 'resolved_action', 'resolved_date'])
+            ->rawColumns(['ticket_num', 'company_name', 'client_company', 'email', 'online_system', 'subject', 'message', 'action', 'attachment', 'created_date', 'resolved_action', 'resolved_date', 'status'])
             ->make(true);
     }
 

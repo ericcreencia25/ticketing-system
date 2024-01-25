@@ -39,6 +39,12 @@ class UserController extends Controller
                 $details = $data->email;
                 return $details;
             })
+            ->addColumn('last_activity', function ($data) {
+                
+
+                $details = date("Y-m-d H:i:s", strtotime($data->last_seen));
+                return $details;
+            })
             ->addColumn('action', function ($data) {
                 $details = '<button type="button" class="btn btn-outline-secondary" onclick="editAccount('.$data->id.')"><i class="fa-solid fa-user"></i></button>';
 
