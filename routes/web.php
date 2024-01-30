@@ -15,6 +15,10 @@ Route::get('/contact-us', function () {
     return view('message');
 });
 
+// Route::get('/email', function () {
+//     return view('email');
+// });
+
 Route::post('/send-message', [MessageController::class, 'sendMessage'])->name('/send-message');
 Route::post('/get-concern-list', [MessageController::class, 'getConcernList'])->name('/get-concern-list');
 Route::post('/resolve-ticket', [MessageController::class, 'resolveTicket'])->name('/resolve-ticket');
@@ -24,6 +28,7 @@ Route::post('/update-system', [UserController::class, 'updateOnlineSystem'])->na
 Route::post('/add-user', [UserController::class, 'addUser'])->name('/add-user');
 Route::post('/get-timeline', [MessageController::class, 'getTimeline'])->name('/get-timeline');
 Route::post('/upload-file', [MessageController::class, 'uploadFile'])->name('/upload-file');
+Route::get('/email', [MessageController::class, 'email'])->name('/email');
  
 Auth::routes();
 

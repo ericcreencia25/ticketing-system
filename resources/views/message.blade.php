@@ -229,7 +229,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                       <option value="SMR">SMR</option>
                                       <option value="IIS">IIS</option>
                                       <option value="HAZWASTE">HAZWASTE</option>
-                                    </select>
+                                  </select>
                               </div>
 
                               <div class="col-6">

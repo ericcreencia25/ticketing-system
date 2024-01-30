@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Http;
 use Yajra\DataTables\DataTables;
 use PDF;
 use File;
+use Mail; 
 
 use Illuminate\Support\Facades\Auth;
 
@@ -45,6 +46,8 @@ class MessageController extends Controller
         $nextdata = isset($data) ? $data->id : 0;
 
         $tix = 'TIX-' . $now->format('Y-m') . "-" . str_pad($nextdata + 1, 8, "0", STR_PAD_LEFT);
+        $client_name = $request['client-name'];
+
 
         $data = DB::table('concerns')->insert([
             'ticket_number' => $tix,
@@ -69,6 +72,14 @@ class MessageController extends Controller
                 'date' => $now->format('Y-m-d'),
                 'time' => $now->format('H:i:s')
             ]);
+
+            $ticket_number = $tix;
+            $email = $request['e-mail'];
+
+            Mail::send('email', compact('client_name', 'ticket_number'), function($message){
+                $message->to('eric.creencia25@gmail.com');
+                $message->subject('Support Ticket Confirmation');
+              });
 
             return redirect('contact-us')->with('success', $tix);
         }
@@ -376,5 +387,12 @@ class MessageController extends Controller
                 $rtrn['message'] = 'File not uploaded.';
             }
         }
+    }
+
+    public function email(Request $request)
+    {
+        $client_name = 'Josh Kyle';
+        $ticket_number = 'TIX';
+        return view('email', compact('client_name', 'ticket_number'));
     }
 }
