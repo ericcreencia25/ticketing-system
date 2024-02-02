@@ -62,6 +62,11 @@ class HomeController extends Controller
         return view('profile');
     }
 
+    public function managerSurvey()
+    {
+        return view('superadmin.survey-list');
+    }
+
 
     
 

@@ -60,6 +60,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <a href="{{ route('admin.home') }}" class="nav-link">Home</a>
             @endif
           </li>
+          <li class="nav-item">
+            <a href="{{ route('manager.survey') }}" class="nav-link">Survey</a>
+          </li>
         </ul>
       </div>
       @guest

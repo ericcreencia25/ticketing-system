@@ -85,6 +85,90 @@ class MessageController extends Controller
         }
     }
 
+    
+    public function getSurveyList(Request $request) 
+    {
+        $data = DB::table('survey')
+        ->orderBy('id', 'DESC')
+        ->get();
+
+        return DataTables::of($data)
+            ->addColumn('name', function ($data) {
+                $details = '<center><span class="info-box-number text-center text-muted mb-0" >'. $data->name .'</span></center>';
+                return $details;
+            })
+            ->addColumn('position_designation', function ($data) {
+                $details = '<center><span class="info-box-number text-center text-muted mb-0" >'. $data->position_designation .'</span></center>';
+                return $details;
+            })
+            ->addColumn('educational_attainment', function ($data) {
+                $details = '<center><span class="info-box-number text-center text-muted mb-0" >'. $data->educational_attainment .'</span></center>';
+                return $details;
+            })
+            ->addColumn('company_name', function ($data) {
+                $details = '<center><span class="info-box-number text-center text-muted mb-0" >'. $data->company_name .'</span></center>';
+                return $details;
+            })
+            ->addColumn('industry_type', function ($data) {
+                $details = '<center><span class="info-box-number text-center text-muted mb-0" >'. $data->industry_type .'</span></center>';
+                return $details;
+            })
+            ->addColumn('location', function ($data) {
+                $details = '<center><span class="info-box-number text-center text-muted mb-0" >'. $data->location .'</span></center>';
+                return $details;
+            })
+            ->addColumn('gender', function ($data) {
+                $details = '<center><span class="info-box-number text-center text-muted mb-0" >'. $data->gender .'</span></center>';
+                return $details;
+            })
+            ->addColumn('permit_type', function ($data) {
+                $details = '<center><span class="info-box-number text-center text-muted mb-0" >'. $data->permit_type .'</span></center>';
+                return $details;
+            })
+            ->addColumn('responsiveness', function ($data) {
+                $details = '<center><span class="info-box-number text-center text-muted mb-0" >'. $data->responsiveness .'</span></center>';
+                return $details;
+            })
+            ->addColumn('reliability', function ($data) {
+                $details = '<center><span class="info-box-number text-center text-muted mb-0" >'. $data->reliability .'</span></center>';
+                return $details;
+            })
+            ->addColumn('access_facilities', function ($data) {
+                $details = '<center><span class="info-box-number text-center text-muted mb-0" >'. $data->access_facilities .'</span></center>';
+                return $details;
+            })
+            ->addColumn('communication', function ($data) {
+                $details = '<center><span class="info-box-number text-center text-muted mb-0" >'. $data->communication .'</span></center>';
+                return $details;
+            })
+            ->addColumn('costs', function ($data) {
+                $details = '<center><span class="info-box-number text-center text-muted mb-0" >'. $data->costs .'</span></center>';
+                return $details;
+            })
+            ->addColumn('integrity', function ($data) {
+                $details = '<center><span class="info-box-number text-center text-muted mb-0" >'. $data->integrity .'</span></center>';
+                return $details;
+            })
+            ->addColumn('assurance', function ($data) {
+                $details = '<center><span class="info-box-number text-center text-muted mb-0" >'. $data->assurance .'</span></center>';
+                return $details;
+            })
+            ->addColumn('outcome', function ($data) {
+                $details = '<center><span class="info-box-number text-center text-muted mb-0" >'. $data->outcome .'</span></center>';
+                return $details;
+            })
+            ->addColumn('suggestions', function ($data) {
+                $details = '<center><span class="info-box-number text-center text-muted mb-0" >'. $data->suggestions .'</span></center>';
+                return $details;
+            })
+            ->addColumn('created_date', function ($data) {
+                $details = '<center><span class="info-box-number text-center text-muted mb-0" >'. date("d M. Y", strtotime($data->created_date)) .'</span></center>';
+                return $details;
+            })
+            ->rawColumns(['name', 'position_designation', 'educational_attainment', 'company_name', 'industry_type', 'location', 'gender', 'permit_type', 'responsiveness', 'reliability', 'access_facilities', 'communication', 'outcome', 'suggestions', 'costs', 'integrity', 'assurance', 'created_date'])
+            ->make(true);
+    }
+
     public function getConcernList(Request $request) 
     {
         $newArr = [];
@@ -160,11 +244,13 @@ class MessageController extends Controller
                 return $details;
             })
             ->addColumn('status', function ($data) {
-                if($data->resolved == 1){
+                if($data->status == 1){
+                    // $status = '<span class="badge badge-info">On going</span>';
+                    $status = '<span class="badge badge-info">Processing</span>';
+                } else if($data->status == 2){
                     $status = '<span class="badge badge-success">Resolved</span>';
                 } else {
                     $status = '<span class="badge badge-warning">Pending</span>';
-
                 }
                 $details = '<span id="span">' . $status . '</span>';
                 return $details;
@@ -208,25 +294,88 @@ class MessageController extends Controller
 
     public function getTicketData(Request $request)
     {
-        $data = DB::table('concerns')
+        $arr = [];
+        $concerns = DB::table('concerns')
             ->where('id', $request->id)
             ->first();
 
-        return $data;
+        $ticket_number = $concerns->ticket_number;
+        $now = new \DateTime();
+
+        $concerns_history = DB::table('concerns_history')
+            ->select('date')  
+            ->where('ticket_number', $ticket_number)
+            ->orderBy('date', 'DESC')
+            ->groupBy('date')
+            ->get();
+        $newArr = [];
+        foreach ($concerns_history as $key => $value) {
+            $newData = [];
+
+            if($now->format('Y-m-d') == date("Y-m-d", strtotime($value->date))) {
+                $date = 'Today';
+            } else {
+                $date = date("d M. Y", strtotime($value->date));
+            }
+
+            $newData['date'] =  $date;
+
+            $concerns_history = DB::table('concerns_history')
+            ->select('date', 'status', 'remarks', 'ticket_number', 'time')  
+            ->where('ticket_number', $ticket_number)
+            ->orderBy('date', 'DESC')
+            ->get();
+
+            $newData['data'] = $concerns_history;
+
+            $newArr[] = $newData;
+        }
+
+        $arr[0] = $concerns;
+        $arr[1] = $newArr;
+
+        // return $newArr;
+
+        return $arr;
     }
 
     public function resolveTicket(Request $request)
     {
         $now = new \DateTime();
-        $data = DB::table('concerns')
-        ->where('id', $request->id)
-        ->update([
-            'action' => $request->action,
-            'resolved' => 1,
-            'resolved_date' => $now->format('Y-m-d H:i:s'),
-        ]);
 
-        if($data) {
+        if($request->status == 2) {
+
+            $data = DB::table('concerns')
+            ->where('id', $request->id)
+            ->update([
+                'action' => $request->action,
+                'status' => $request->status,
+                'resolved_date' => $now->format('Y-m-d H:i:s'),
+            ]);
+
+        } else if($request->status == 1) {
+
+            $data = DB::table('concerns')
+            ->where('id', $request->id)
+            ->update([
+                'status' => $request->status,
+                'resolved_date' => $now->format('Y-m-d H:i:s'),
+            ]);
+
+        }
+
+        $concerns_history = DB::table('concerns_history')->insert([
+            'ticket_number' => $request->ticket,
+            'status' => $request->status,
+            'remarks' => $request->action,
+            'date' => $now->format('Y-m-d'),
+            'time' => $now->format('H:i:s'),
+            'created_by' => Auth::user()->name
+        ]);
+        
+
+        if($concerns_history) {
+
             DB::table('logs')->insert([
                 'ticket_number' => $request->ticket,
                 'action' => 'resolved',
@@ -394,5 +543,110 @@ class MessageController extends Controller
         $client_name = 'Josh Kyle';
         $ticket_number = 'TIX';
         return view('email', compact('client_name', 'ticket_number'));
+    }
+
+    public function sendSurvey(Request $request)
+    {
+        $validator = $this->validate( $request, 
+            [
+                
+                'g-recaptcha-response' => 'required|captcha',
+                'educational-attainment' => 'required',
+                'type-of-industry' => 'required',
+                'location' => 'required',
+                'gender' => 'required',
+                'permit-type' => 'required',
+                'first-row' => 'required',
+                'second-row' => 'required',
+                'third-row' => 'required',
+                'fourth-row' => 'required',
+                'fifth-row' => 'required',
+                'sixth-row' => 'required',
+                'seventh-row' => 'required',
+                'eight-row' => 'required',
+            ]
+        );
+
+        $name = $request['name'];
+        $position_designation = $request['position-designation'];
+        $educational_attainment = $request['educational-attainment'];
+        $company_name = $request['company-name'];
+        $industry_type = $request['type-of-industry'];
+        $location = $request['location'];
+        $gender = $request['gender'];
+        $permit_type = $request['permit-type'];
+        $responsiveness = $request['first-row'];
+        $reliability = $request['second-row'];
+        $access_facilities = $request['third-row'];
+        $communication = $request['fourth-row'];
+        $costs = $request['fifth-row'];
+        $integrity = $request['sixth-row'];
+        $assurance = $request['seventh-row'];
+        $outcome = $request['eight-row'];
+        $suggestions = $request['suggestions'];
+        $now = new \DateTime();
+
+        $data = DB::table('survey')->insert([
+            'name' => $name,
+            'position_designation' => $position_designation,
+            'educational_attainment' => $educational_attainment,
+            'company_name' => $company_name,
+            'industry_type' => $industry_type,
+            'location' => $location,
+            'gender' => $gender,
+            'permit_type' => $permit_type,
+            'responsiveness' => $responsiveness,
+            'reliability' => $reliability,
+            'access_facilities' => $access_facilities,
+            'communication' => $communication,
+            'costs' => $costs,
+            'integrity' => $integrity,
+            'assurance' => $assurance,
+            'outcome' => $outcome,
+            'suggestions' => $suggestions,
+            'created_date' => $now->format('Y-m-d H:i:s'),
+        ]);
+
+        if($data) {
+            // DB::table('logs')->insert([
+            //     'ticket_number' => $request->ticket,
+            //     'action' => 'resolved',
+            //     'function' => 'support action',
+            //     'name' => Auth::user()->name,
+            //     'user_id' => Auth::user()->id,
+            //     'user_type' => 1,
+            //     'date' => $now->format('Y-m-d'),
+            //     'time' => $now->format('H:i:s')
+            // ]);
+
+            return redirect('survey')->with('success');
+        }
+    }
+
+    public function getSurveyRate(Request $request)
+    {
+        $arr = [];
+
+        $totsurveycount = DB::table('survey')->count();
+
+        $responsiveness = DB::table('survey')->sum('responsiveness');
+        $reliability = DB::table('survey')->sum('reliability');
+        $access_facilities = DB::table('survey')->sum('access_facilities');
+        $communication = DB::table('survey')->sum('communication');
+        $costs = DB::table('survey')->sum('costs');
+        $integrity = DB::table('survey')->sum('integrity');
+        $assurance = DB::table('survey')->sum('assurance');
+        $outcome = DB::table('survey')->sum('outcome');
+        
+        $arr['responsiveness'] = $responsiveness / $totsurveycount;
+        $arr['reliability'] = $reliability / $totsurveycount;
+        $arr['access_facilities'] = $access_facilities / $totsurveycount;
+        $arr['communication'] = $communication / $totsurveycount;
+        $arr['costs'] = $costs / $totsurveycount;
+        $arr['integrity'] = $integrity / $totsurveycount;
+        $arr['assurance'] = $assurance / $totsurveycount;
+        $arr['outcome'] = $outcome / $totsurveycount;
+
+        return $arr;
     }
 }

@@ -15,12 +15,13 @@ Route::get('/contact-us', function () {
     return view('message');
 });
 
-// Route::get('/email', function () {
-//     return view('email');
-// });
+Route::get('/survey', function () {
+    return view('survey');
+});
 
 Route::post('/send-message', [MessageController::class, 'sendMessage'])->name('/send-message');
 Route::post('/get-concern-list', [MessageController::class, 'getConcernList'])->name('/get-concern-list');
+Route::post('/get-survey-list', [MessageController::class, 'getSurveyList'])->name('/get-survey-list');
 Route::post('/resolve-ticket', [MessageController::class, 'resolveTicket'])->name('/resolve-ticket');
 Route::post('/get-user-list', [UserController::class, 'getUserList'])->name('/get-user-list');
 Route::post('/get-acount', [UserController::class, 'getAcount'])->name('/get-acount');
@@ -29,6 +30,8 @@ Route::post('/add-user', [UserController::class, 'addUser'])->name('/add-user');
 Route::post('/get-timeline', [MessageController::class, 'getTimeline'])->name('/get-timeline');
 Route::post('/upload-file', [MessageController::class, 'uploadFile'])->name('/upload-file');
 Route::get('/email', [MessageController::class, 'email'])->name('/email');
+Route::post('/send-survey', [MessageController::class, 'sendSurvey'])->name('/send-survey');
+Route::post('/get-survey-rate', [MessageController::class, 'getSurveyRate'])->name('/get-survey-rate');
  
 Auth::routes();
 
@@ -59,6 +62,7 @@ Route::middleware(['auth', 'user-access:manager'])->group(function () {
     // Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
    
     Route::get('/manager/home', [HomeController::class, 'managerHome'])->name('manager.home');
+    Route::get('/manager/survey', [HomeController::class, 'managerSurvey'])->name('manager.survey');
     Route::get('/manager/logs', [HomeController::class, 'timelineLogs'])->name('manager.logs');
     Route::get('/manager/accounts', [HomeController::class, 'manageAccounts'])->name('manager.accounts');
     

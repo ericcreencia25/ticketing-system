@@ -10,6 +10,32 @@
 <link rel="stylesheet" href="../../AdminLTE-3.2.0/dist/css/bootstrap-side-modals.css">
 @section('content')
 <!-- <div class="container"> -->
+    <div class="row">
+        <div class="col-12 col-sm-4">
+            <div class="info-box bg-light">
+                <div class="info-box-content">
+                    <span class="info-box-text text-center text-muted">PENDING</span>
+                    <span class="info-box-number text-center text-muted mb-0">2300</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-4">
+            <div class="info-box bg-light">
+                <div class="info-box-content">
+                    <span class="info-box-text text-center text-muted">ON GOING</span>
+                    <span class="info-box-number text-center text-muted mb-0">2000</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-4">
+            <div class="info-box bg-light">
+                <div class="info-box-content">
+                    <span class="info-box-text text-center text-muted">RESOLVED</span>
+                    <span class="info-box-number text-center text-muted mb-0">20</span>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
@@ -119,86 +145,112 @@
 </div> -->
 
 <div class="modal modal-right fade" id="right_modal_lg" tabindex="-1" role="dialog" aria-labelledby="right_modal_lg">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <!-- <div class="modal-header">
-        <h5 class="modal-title">Right Modal LG Title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div> -->
-      <div class="modal-header">
-        <i>
-            <h5 class="modal-title" id="ticket-number">
-            </h5>
-            <span id="badge-status-ticket"></span>
-        </i>
-        
-        <span class="time"><i class="fas fa-clock"></i> <small id="date-submitted"></small></span>
-      </div>
-      <div class="modal-body">
-        <input id="ticket-id" hidden />
-        <div class="col-12">
-            <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <small>
-                                    <label for="company-name">Company Name</label>
-                                    <input type="text" id="company-name" class="form-control" style="background: white;" readonly />
-                                </small>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <small>
-                                    <label for="client-name">Client Name</label>
-                                    <input type="text" id="client-name" class="form-control" style="background: white;" readonly/>
-                                </small>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <small>
-                                    <label for="e-mail">E-Mail</label>
-                                    <input type="email" id="e-mail" class="form-control" style="background: white;" readonly />
-                                </small>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <small>
-                                    <label for="online-system">Online System</label>
-                                    <input type="email" id="online-system" class="form-control" style="background: white;" readonly />
-                                </small>
-                            </div>
-                        </div>
-                    </div>
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i>
+                    <h5 class="modal-title" id="ticket-number">
+                    </h5>
+                    <span id="badge-status-ticket"></span>
+                </i>
+                <span class="time"><i class="fas fa-clock"></i> <small id="date-submitted"></small></span>
+            </div>
+            <div class="modal-body">
+                <input id="ticket-id" hidden />
+                <div class="card-header p-2">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item"><a class="nav-link active" href="#action" data-toggle="tab">Action</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#history" data-toggle="tab">History</a></li>
+                    </ul>
+                </div><!-- /.card-header -->
 
-                    <div class="form-group">
-                        <small>
-                            <label for="subject">Subject</label>
-                            <input type="text" id="subject" class="form-control" style="background: white;" readonly />
-                        </small>
+                <div class="card-body">
+                    <div class="tab-content">
+                        <!-- /.tab-pane -->
+                        <div class="tab-pane" id="history"></div>
+                        <!-- /.tab-pane -->
+
+                        <!-- ACTION -->
+                        <div class="active tab-pane" id="action">
+
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <small>
+                                                <label for="company-name">Company Name</label>
+                                                <input type="text" id="company-name" class="form-control" style="background: white;" readonly />
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <small>
+                                                <label for="client-name">Client Name</label>
+                                                <input type="text" id="client-name" class="form-control" style="background: white;" readonly/>
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <small>
+                                                <label for="e-mail">E-Mail</label>
+                                                <input type="email" id="e-mail" class="form-control" style="background: white;" readonly />
+                                            </small>
+                                        </div>
+                                        </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <small>
+                                                <label for="online-system">Online System</label>
+                                                <input type="email" id="online-system" class="form-control" style="background: white;" readonly />
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <small>
+                                        <label for="subject">Subject</label>
+                                        <input type="text" id="subject" class="form-control" style="background: white;" readonly />
+                                    </small>
+                                </div>
+                                <div class="form-group">
+                                    <small>
+                                        <label for="message">Message</label>
+                                        <textarea id="message" class="form-control" rows="4" style="height: 300px; background: white;" readonly></textarea>
+                                    </small>
+                                </div>
+                                <div class="form-group">
+                                    <small>
+                                        <label for="message">Status</label>
+                                        <select id="status" name="status"  class="form-control custom-select" required>
+                                          <option selected="" value="">Select one</option>
+                                          <option value="1">Processing</option>
+                                          <option value="2">Resolved</option>
+                                        </select>
+                                    </small>
+                                    
+                                </div>
+                                <div class="form-group" id="remarks-div" hidden>
+                                    <small>
+                                        <label for="message">Remarks/Action Taken</label>
+                                        <textarea id="action-taken" class="form-control" rows="4" style="height: 300px; background: white;"></textarea>
+                                    </small>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-warning" id="btn-resolve" disabled="disabled">Submit <i class="fa-solid fa-paper-plane"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.tab-pane -->
                     </div>
-                    <div class="form-group">
-                        <small>
-                            <label for="message">Message</label>
-                            <textarea id="message" class="form-control" rows="4" style="height: 300px; background: white;" readonly></textarea>
-                        </small>
-                    </div>
-                    <div class="form-group">
-                        <small>
-                            <label for="message">Action taken</label>
-                            <textarea id="action-taken" class="form-control" rows="4" style="height: 300px; background: white;"></textarea>
-                        </small>
-                    </div>
-                    <div class="form-group">
-                      <button type="submit" class="btn btn-warning" id="btn-resolve">Submit <i class="fa-solid fa-paper-plane"></i></button>
-                    </div>
-                  </div>
-      </div>
+                    <!-- /.tab-content -->
+                </div>
+                <!-- /.card-body -->
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 @endsection
 <script src="../../AdminLTE-3.2.0/plugins/jquery/jquery.min.js"></script>
@@ -220,6 +272,28 @@
 
 <script>
     $(function () {
+
+        $("#status").on('change', function() {
+            var value = $(this).val();
+            
+            $("#btn-resolve").removeAttr('disabled');
+
+            $("#btn-resolve").removeClass();
+            $("#btn-resolve").html('Submit <i class="fa-solid fa-paper-plane"></i>');
+            $("#btn-resolve").addClass('btn btn-primary');
+
+            $("#action-taken").val('');
+
+            if(value == 1) {
+                $("#remarks-div").removeAttr('hidden');
+            } else if(value == 2) {
+                $("#remarks-div").removeAttr('hidden');
+            } else {
+                $("#remarks-div").attr('hidden', 'hidden');
+                $("#btn-resolve").attr('disabled', 'disabled');
+            }
+
+        });
         
         var table = $('#concern-list').DataTable({
             destroy: true,
@@ -382,6 +456,7 @@
                 $("#message").val(result['message']);
                 $("#action-taken").val(result['action']);
                 $("#date-submitted").html('Date: ' + result['created_date']);
+                $("#status").val(result['status']);
 
                 if(result['resolved'] == 1) {
                     $("#btn-resolve").attr('disabled', 'disabled');
@@ -394,7 +469,6 @@
                     $("#badge-status-ticket").html('Resolved');
                     $("#badge-status-ticket").addClass('badge badge-success');
                 } else {
-                    $("#btn-resolve").removeAttr('disabled');
                     $("#action-taken").removeAttr('readonly');
                     $("#btn-resolve").removeClass();
                     $("#btn-resolve").html('Submit <i class="fa-solid fa-paper-plane"></i>');
