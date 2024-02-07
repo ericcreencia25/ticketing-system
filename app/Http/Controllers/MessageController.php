@@ -292,51 +292,24 @@ class MessageController extends Controller
             ->make(true);
     }
 
+    public function getTicketHistory(Request $request) 
+    {
+        
+        $data = DB::table('concerns_history')
+                ->where('ticket_number', $request->ticket_number)
+                ->orderBy('id', 'DESC')
+                ->get();
+
+        return $data;
+    }
+
     public function getTicketData(Request $request)
     {
-        $arr = [];
-        $concerns = DB::table('concerns')
-            ->where('id', $request->id)
-            ->first();
+        $data = DB::table('concerns')
+                ->where('id', $request->id)
+                ->first();
 
-        $ticket_number = $concerns->ticket_number;
-        $now = new \DateTime();
-
-        $concerns_history = DB::table('concerns_history')
-            ->select('date')  
-            ->where('ticket_number', $ticket_number)
-            ->orderBy('date', 'DESC')
-            ->groupBy('date')
-            ->get();
-        $newArr = [];
-        foreach ($concerns_history as $key => $value) {
-            $newData = [];
-
-            if($now->format('Y-m-d') == date("Y-m-d", strtotime($value->date))) {
-                $date = 'Today';
-            } else {
-                $date = date("d M. Y", strtotime($value->date));
-            }
-
-            $newData['date'] =  $date;
-
-            $concerns_history = DB::table('concerns_history')
-            ->select('date', 'status', 'remarks', 'ticket_number', 'time')  
-            ->where('ticket_number', $ticket_number)
-            ->orderBy('date', 'DESC')
-            ->get();
-
-            $newData['data'] = $concerns_history;
-
-            $newArr[] = $newData;
-        }
-
-        $arr[0] = $concerns;
-        $arr[1] = $newArr;
-
-        // return $newArr;
-
-        return $arr;
+        return $data;
     }
 
     public function resolveTicket(Request $request)
@@ -368,9 +341,9 @@ class MessageController extends Controller
             'ticket_number' => $request->ticket,
             'status' => $request->status,
             'remarks' => $request->action,
+            'created_by' => Auth::user()->name,
             'date' => $now->format('Y-m-d'),
-            'time' => $now->format('H:i:s'),
-            'created_by' => Auth::user()->name
+            'time' => $now->format('H:i:s')
         ]);
         
 
@@ -646,6 +619,75 @@ class MessageController extends Controller
         $arr['integrity'] = $integrity / $totsurveycount;
         $arr['assurance'] = $assurance / $totsurveycount;
         $arr['outcome'] = $outcome / $totsurveycount;
+
+        return $arr;
+    }
+
+    public function getStatusCount(Request $request)
+    {
+        $newArr = [];
+
+        if(Auth::user()->ecc == 1) {
+            array_push($newArr, 'ECC');
+        }
+
+        if(Auth::user()->cnc == 1) {
+            array_push($newArr, 'CNC');
+        }
+
+        if(Auth::user()->eiais == 1) {
+            array_push($newArr, 'EIAIS');
+        }
+
+        if(Auth::user()->opms == 1) {
+            array_push($newArr, 'OPMS');
+        }
+
+        if(Auth::user()->crs == 1) {
+            array_push($newArr, 'CRS');
+        }
+
+        if(Auth::user()->smr == 1) {
+            array_push($newArr, 'SMR');
+        }
+
+        if(Auth::user()->cmr == 1) {
+            array_push($newArr, 'CMR');
+        }
+
+        if(Auth::user()->iis == 1) {
+            array_push($newArr, 'IIS');
+        }
+
+        if(Auth::user()->hazwaste == 1) {
+            array_push($newArr, 'HAZWASTE');
+        }
+
+        $tot = DB::table('concerns')
+        ->whereIn('online_system', $newArr)
+        ->count();
+
+        $pending = DB::table('concerns')
+        ->whereIn('online_system', $newArr)
+        ->where('status', 0)
+        ->count();
+
+        $processing = DB::table('concerns')
+        ->whereIn('online_system', $newArr)
+        ->where('status', 1)
+        ->count();
+
+        $resolved = DB::table('concerns')
+        ->whereIn('online_system', $newArr)
+        ->where('status', 2)
+        ->count();
+
+        $arr = [];
+
+        $arr['pending'] = $pending;
+        $arr['processing'] = $processing;
+        $arr['resolved'] = $resolved;
+        $arr['tot'] = $tot;
 
         return $arr;
     }

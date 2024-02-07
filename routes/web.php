@@ -21,6 +21,7 @@ Route::get('/survey', function () {
 
 Route::post('/send-message', [MessageController::class, 'sendMessage'])->name('/send-message');
 Route::post('/get-concern-list', [MessageController::class, 'getConcernList'])->name('/get-concern-list');
+Route::post('/get-ticket-history', [MessageController::class, 'getTicketHistory'])->name('/get-ticket-history');
 Route::post('/get-survey-list', [MessageController::class, 'getSurveyList'])->name('/get-survey-list');
 Route::post('/resolve-ticket', [MessageController::class, 'resolveTicket'])->name('/resolve-ticket');
 Route::post('/get-user-list', [UserController::class, 'getUserList'])->name('/get-user-list');
@@ -32,6 +33,7 @@ Route::post('/upload-file', [MessageController::class, 'uploadFile'])->name('/up
 Route::get('/email', [MessageController::class, 'email'])->name('/email');
 Route::post('/send-survey', [MessageController::class, 'sendSurvey'])->name('/send-survey');
 Route::post('/get-survey-rate', [MessageController::class, 'getSurveyRate'])->name('/get-survey-rate');
+Route::post('/get-status-count', [MessageController::class, 'getStatusCount'])->name('/get-status-count');
  
 Auth::routes();
 

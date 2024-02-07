@@ -10,27 +10,35 @@
 @section('content')
 <!-- <div class="container"> -->
     <div class="row">
-        <div class="col-12 col-sm-4">
+        <div class="col-12 col-sm-3">
             <div class="info-box bg-light">
                 <div class="info-box-content">
                     <span class="info-box-text text-center text-muted">PENDING</span>
-                    <span class="info-box-number text-center text-muted mb-0">2300</span>
+                    <span class="info-box-number text-center text-muted mb-0" id="pending-span">999</span>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-4">
+        <div class="col-12 col-sm-3">
             <div class="info-box bg-light">
                 <div class="info-box-content">
                     <span class="info-box-text text-center text-muted">PROCESSING</span>
-                    <span class="info-box-number text-center text-muted mb-0">2000</span>
+                    <span class="info-box-number text-center text-muted mb-0" id="processing-span">999</span>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-4">
+        <div class="col-12 col-sm-3">
             <div class="info-box bg-light">
                 <div class="info-box-content">
                     <span class="info-box-text text-center text-muted">RESOLVED</span>
-                    <span class="info-box-number text-center text-muted mb-0">20</span>
+                    <span class="info-box-number text-center text-muted mb-0" id="resolved-span">999</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-3">
+            <div class="info-box bg-light">
+                <div class="info-box-content">
+                    <span class="info-box-text text-center text-muted">TOTAL</span>
+                    <span class="info-box-number text-center text-muted mb-0" id="tot-span">999</span>
                 </div>
             </div>
         </div>
@@ -168,10 +176,16 @@
                     <div class="tab-content">
                         <!-- /.tab-pane -->
                         <div class="tab-pane" id="history">
-                            <div class="timeline timeline-inverse" id="timeline-data">
-
-                            </div>
-
+                            <table class="table table-bordered" id="history-list">
+                                <thead>
+                                    <th>Ticket Number</th>
+                                    <th>Status</th>
+                                    <th>Remarks</th>
+                                    <th>Date</th>
+                                </thead>
+                                <tbody id="history-list-body">
+                                </tbody>
+                            </table>
                         </div>
                         <!-- /.tab-pane -->
 
@@ -278,6 +292,31 @@
 <script>
     $(function () {
 
+        $.ajax({
+                url: "{{route('/get-status-count')}}",
+                type: 'POST',
+                data: {
+                    _token: '{{csrf_token()}}',
+                },
+                beforeSend: function () {
+
+                    $('.loading-overlay').show();
+                    $('.loading-overlay-image-container').show();
+                },
+                complete: function () {
+
+                    $('.loading-overlay').hide();
+                    $('.loading-overlay-image-container').hide();
+
+                },
+                success: function (result) {
+                    $("#pending-span").text(result['pending']);
+                    $("#processing-span").text(result['processing']);
+                    $("#resolved-span").text(result['resolved']);
+                    $("#tot-span").text(result['tot']);
+                }
+            });
+
         $("#status").on('change', function() {
             var value = $(this).val();
             
@@ -291,8 +330,10 @@
 
             if(value == 1) {
                 $("#remarks-div").removeAttr('hidden');
+                $("#action-taken").removeAttr('readonly');
             } else if(value == 2) {
                 $("#remarks-div").removeAttr('hidden');
+                $("#action-taken").removeAttr('readonly');
             } else {
                 $("#remarks-div").attr('hidden', 'hidden');
                 $("#btn-resolve").attr('disabled', 'disabled');
@@ -451,21 +492,19 @@
 
             },
             success: function (result) {
-                console.log(result);
+                $("#ticket-id").val(result['id']);
+                $("#ticket-number").html(result['ticket_number']);
+                $("#client-name").val(result['client_name']);
+                $("#company-name").val(result['company_name']);
+                $("#e-mail").val(result['email']);
+                $("#online-system").val(result['online_system']);
+                $("#subject").val(result['subject']);
+                $("#message").val(result['message']);
+                $("#action-taken").val(result['action']);
+                $("#date-submitted").html('Date: ' + result['created_date']);
+                $("#status").val(result['status']);
 
-                $("#ticket-id").val(result[0]['id']);
-                $("#ticket-number").html(result[0]['ticket_number']);
-                $("#client-name").val(result[0]['client_name']);
-                $("#company-name").val(result[0]['company_name']);
-                $("#e-mail").val(result[0]['email']);
-                $("#online-system").val(result[0]['online_system']);
-                $("#subject").val(result[0]['subject']);
-                $("#message").val(result[0]['message']);
-                $("#action-taken").val(result[0]['action']);
-                $("#date-submitted").html('Date: ' + result[0]['created_date']);
-                $("#status").val(result[0]['status']);
-
-                if(result[0]['status'] == 1) {
+                if(result['status'] == 1) {
                     $("#btn-resolve").attr('disabled', 'disabled');
                     $("#action-taken").attr('readonly', 'readonly');
                     $("#btn-resolve").removeClass();
@@ -475,7 +514,7 @@
                     $("#badge-status-ticket").removeClass();
                     $("#badge-status-ticket").html('Processing');
                     $("#badge-status-ticket").addClass('badge badge-info');
-                } else if(result[0]['status'] == 2) {
+                } else if(result['status'] == 2) {
                     $("#btn-resolve").attr('disabled', 'disabled');
                     $("#action-taken").attr('readonly', 'readonly');
                     $("#btn-resolve").removeClass();
@@ -496,6 +535,48 @@
                     $("#badge-status-ticket").html('Pending');
                     $("#badge-status-ticket").addClass('badge badge-warning');
                 }
+
+
+                $.ajax({
+                    url: "{{route('/get-ticket-history')}}",
+                    type: 'POST',
+                    data: {
+                        ticket_number: result['ticket_number'],
+                        _token: '{{csrf_token()}}',
+                    },
+                    beforeSend: function () {
+
+                        $('.loading-overlay').show();
+                        $('.loading-overlay-image-container').show();
+                    },
+                    complete: function () {
+
+                        $('.loading-overlay').hide();
+                        $('.loading-overlay-image-container').hide();
+
+                    },
+                    success: function (result) {
+                        $("#history-list-body").html('');
+                        $.each(result, function (index, value) {
+                            if( value['status'] == 1 ) {
+                                var status = '<span class="badge badge-info">Processing</span>';
+                            } else if( value['status'] == 2 ) {
+                                var status = '<span class="badge badge-success">Resolved</span>';
+                            } else {
+                                var status = '<span class="badge badge-warning">Pending</span>';
+                            }   
+                            details = `<tr>
+                                            <td><small>`+value['ticket_number']+`</small></td>
+                                            <td><small>`+status+`</small></td>
+                                            <td><small>`+value['remarks']+`</small></td>
+                                            <td><small>`+value['date']+`</small></td>
+                                        <tr>`;
+                            $("#history-list-body").append(details);
+                        });
+
+                    }
+
+                });
 
             }
 
@@ -531,6 +612,11 @@
             });
 
         }
+
+        var ticket_number = $("#ticket-number").text();
+
+
+        
 
         
         $("#right_modal_lg").modal();
