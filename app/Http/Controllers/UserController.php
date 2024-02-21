@@ -40,8 +40,6 @@ class UserController extends Controller
                 return $details;
             })
             ->addColumn('last_activity', function ($data) {
-                
-
                 $details = date("Y-m-d H:i:s", strtotime($data->last_seen));
                 return $details;
             })
@@ -52,8 +50,6 @@ class UserController extends Controller
 
                 $details .= '<button type="button" class="btn btn-outline-secondary" onclick="resetPassword('.$data->id.')"><i class="fa-solid fa-key"></i></button>';
 
-
-                
                 return $details;
             })
             ->rawColumns(['name', 'user_type', 'email','action'])

@@ -219,16 +219,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     <p class="text-red">{{ $message }}</p>
                                   @enderror
                                   <select id="online-system" name="online-system"  class="form-control custom-select" required>
-                                      <option selected="" disabled="" value="">Select one</option>
-                                      <option value="ECC">ECC</option>
-                                      <option value="CNC">CNC</option>
-                                      <option value="EIAIS">EIAIS</option>
-                                      <option value="OPMS">OPMS</option>
-                                      <option value="CRS">CRS</option>s
-                                      <option value="CMR">CMR</option>
-                                      <option value="SMR">SMR</option>
-                                      <option value="IIS">IIS</option>
-                                      <option value="HAZWASTE">HAZWASTE</option>
+                                    <option selected="" disabled="" value="">Select one</option>
+                                    <option value="ECC">Environmental Compliance Certificate (ECC)</option>
+                                    <option value="CNC">Certificate of Non-Coverage (CNC)</option>
+                                    <option value="EIAIS">Environmental Impact Assesement Information System (EIAIS)</option>
+                                    <option value="OPMS">Online Permitting & Monitoring System (OPMS)</option>
+                                    <option value="CRS">Company Registration (CRS)</option>
+                                    <option value="CMR">Compliance Monitoring Report (CMR)</option>
+                                    <option value="SMR">Self Monitoring Report (SMR)</option>
+                                    <option value="IIS">Integrated Information System (IIS)</option>
+                                    <option value="HAZWASTE">Hazardous Waste Management</option>
                                   </select>
                               </div>
 
@@ -349,7 +349,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Control sidebar content goes here -->
   </aside>
   <!-- /.control-sidebar -->
-
 </div>
 <!-- ./wrapper -->
 

@@ -217,7 +217,7 @@
                                                 <input type="email" id="e-mail" class="form-control" style="background: white;" readonly />
                                             </small>
                                         </div>
-                                        </div>
+                                    </div>
                                     <div class="col-6">
                                         <div class="form-group">
                                             <small>
@@ -244,7 +244,8 @@
                                     <small>
                                         <label for="message">Status</label>
                                         <select id="status" name="status"  class="form-control custom-select" required>
-                                          <option selected="" value="">Select one</option>
+                                          <option selected="" value="" disabled>Select one</option>
+                                          <option value="0">Pending</option>
                                           <option value="1">Processing</option>
                                           <option value="2">Resolved</option>
                                         </select>
@@ -334,6 +335,9 @@
             } else if(value == 2) {
                 $("#remarks-div").removeAttr('hidden');
                 $("#action-taken").removeAttr('readonly');
+            } else if(value == 0) {
+                $("#remarks-div").removeAttr('hidden');
+                $("#action-taken").removeAttr('readonly');
             } else {
                 $("#remarks-div").attr('hidden', 'hidden');
                 $("#btn-resolve").attr('disabled', 'disabled');
@@ -412,7 +416,7 @@
             ],
             'columnDefs' : [
                 //hide the second & fourth column
-                { 'visible': false, 'targets': [6, 9, 10] }
+                { 'visible': false, 'targets': [3, 6, 9, 10] }
             ],
             dom: 'Bfrtip',
             buttons: [

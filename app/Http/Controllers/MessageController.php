@@ -58,8 +58,19 @@ class MessageController extends Controller
             'subject' => $request['subject'],
             'message' => $request['message'],
             'seen' => 0,
+            'status' => 0,
             'created_date' => $now->format('Y-m-d H:i:s')
         ]);
+
+        $concerns_history = DB::table('concerns_history')->insert([
+            'ticket_number' => $tix,
+            'status' => 0,
+            'remarks' => $request->action,
+            'created_by' => Auth::user()->name,
+            'date' => $now->format('Y-m-d'),
+            'time' => $now->format('H:i:s')
+        ]);
+
 
         if($data) {
 
@@ -216,11 +227,11 @@ class MessageController extends Controller
 
         return DataTables::of($data)
             ->addColumn('ticket_num', function ($data) {
-                $details = '<em><b><p class="text">' . $data->ticket_number . '</a></b></em>';
+                $details = '<em><b><p class="text"><a href="#">' . $data->ticket_number . '</a></p></b></em>';
                 return $details;
             })
             ->addColumn('company_name', function ($data) {
-                $details = $data->company_name;
+                $details = '<i>' . $data->company_name . '</i>';
                 return $details;
             })
             ->addColumn('client_company', function ($data) {
@@ -261,7 +272,7 @@ class MessageController extends Controller
                 return $details;
             })
             ->addColumn('created_date', function ($data) {
-                $details = '<span id="span">' . date("d M. Y", strtotime($data->created_date)) . '</span>';
+                $details = '<span id="span">' . date("M d Y", strtotime($data->created_date)) . '</span>';
 
                 return $details;
             })
@@ -270,7 +281,7 @@ class MessageController extends Controller
                 return $details;
             })
             ->addColumn('resolved_date', function ($data) {
-                $details = isset($data->resolved_date) ? '<span id="span">' . date("d M. Y", strtotime($data->resolved_date)) . '</span>' : '';
+                $details = isset($data->resolved_date) ? '<span id="span">' . date("M d Y", strtotime($data->resolved_date)) . '</span>' : '';
                 return $details;
             })
             ->addColumn('action', function ($data) {
@@ -279,12 +290,10 @@ class MessageController extends Controller
                 </button>';
 
                 if($data->seen == 0) {
-                    $details = '<button type="button" class="btn btn-dark border rounded-pill shadow-sm mb-1" data-toggle="modal" data-target="#right_modal_lg" onclick="view('.$data->id.', 0)" id="view-concern-'.$data->id.'" name="view-concern"><i class="fa-solid fa-arrow-right-to-bracket"></i></button>';
+                    $details = '<button type="button" class="btn btn-sm btn-dark border rounded-pill shadow-sm mb-1" data-toggle="modal" data-target="#right_modal_lg" onclick="view('.$data->id.', 0)" id="view-concern-'.$data->id.'" name="view-concern"><i class="fa-solid fa-arrow-right-to-bracket"></i></button>';
                 } else {
-                    $details = '<button type="button" class="btn btn-light border rounded-pill shadow-sm mb-1" data-toggle="modal" data-target="#right_modal_lg" onclick="view('.$data->id.', 1)" id="view-concern-'.$data->id.'" name="view-concern"><i class="fa-solid fa-arrow-right-to-bracket"></i></button>';
+                    $details = '<button type="button" class="btn btn-sm btn-light border rounded-pill shadow-sm mb-1" data-toggle="modal" data-target="#right_modal_lg" onclick="view('.$data->id.', 1)" id="view-concern-'.$data->id.'" name="view-concern"><i class="fa-solid fa-arrow-right-to-bracket"></i></button>';
                 }
-                
-                
 
                 return $details;
             })
@@ -316,7 +325,18 @@ class MessageController extends Controller
     {
         $now = new \DateTime();
 
-        if($request->status == 2) {
+        if($request->status == 1) {
+            $status = 'processing';
+
+            $data = DB::table('concerns')
+            ->where('id', $request->id)
+            ->update([
+                'status' => $request->status,
+                'resolved_date' => $now->format('Y-m-d H:i:s'),
+            ]);
+
+        } else if($request->status == 2) {
+            $status = 'resolved';
 
             $data = DB::table('concerns')
             ->where('id', $request->id)
@@ -326,7 +346,8 @@ class MessageController extends Controller
                 'resolved_date' => $now->format('Y-m-d H:i:s'),
             ]);
 
-        } else if($request->status == 1) {
+        } else if($request->status == 0) {
+            $status = 'pending';
 
             $data = DB::table('concerns')
             ->where('id', $request->id)
@@ -334,9 +355,8 @@ class MessageController extends Controller
                 'status' => $request->status,
                 'resolved_date' => $now->format('Y-m-d H:i:s'),
             ]);
-
         }
-
+        
         $concerns_history = DB::table('concerns_history')->insert([
             'ticket_number' => $request->ticket,
             'status' => $request->status,
@@ -345,13 +365,12 @@ class MessageController extends Controller
             'date' => $now->format('Y-m-d'),
             'time' => $now->format('H:i:s')
         ]);
-        
 
         if($concerns_history) {
 
             DB::table('logs')->insert([
                 'ticket_number' => $request->ticket,
-                'action' => 'resolved',
+                'action' => 'changed status to ' . $status,
                 'function' => 'support action',
                 'name' => Auth::user()->name,
                 'user_id' => Auth::user()->id,

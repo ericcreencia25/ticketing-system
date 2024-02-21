@@ -72,7 +72,7 @@ class NotificationController extends Controller
 
         $resolved = DB::table('concerns')
         ->whereIn('online_system', $newArr)
-        ->where('status', null)
+        ->where('status', 0)
         ->count();
 
         array_push($data, $resolved);
@@ -80,7 +80,7 @@ class NotificationController extends Controller
         $resolveddate = DB::table('concerns')
         ->select('created_date')
         ->whereIn('online_system', $newArr)
-        ->where('status', null)
+        ->where('status', 0)
         ->orderBy('id', 'DESC')
         ->first();
 

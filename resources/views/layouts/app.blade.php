@@ -43,7 +43,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <div class="container">
       <a href="../../AdminLTE-3.2.0/index3.html" class="navbar-brand">
         <img src="../../AdminLTE-3.2.0/dist/img/emb-logo.jpg" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-light">Support Service Ticketing System | </span>
+        <span class="brand-text font-light">SSTS | </span>
       </a>
 
       <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,19 +84,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
             @if(Auth::user()->type == 'manager')
             <a href="{{route('manager.home')}}" class="dropdown-item">
               <i class="fas fa-envelope mr-2"></i> <span id="count-message">4 unssen messages</span>
-              <span class="float-right text-muted text-sm" id="count-minutes">3 mins</span>
+              <!-- <span class="float-right text-muted text-sm" id="count-minutes">3 mins</span> -->
             </a>
             <a href="{{route('manager.home')}}" class="dropdown-item">
               <i class="fas fa-envelope mr-2"></i> <span id="count-message-unresolve">4 unssen messages</span>
-              <span class="float-right text-muted text-sm" id="count-minutes-unresolve">3 mins</span>
+              <!-- <span class="float-right text-muted text-sm" id="count-minutes-unresolve">3 mins</span> -->
             </a>
             @elseif(Auth::user()->type == 'admin')
             <a href="{{route('admin.home')}}" class="dropdown-item">
               <i class="fas fa-envelope mr-2"></i> <span id="count-message">4 unssen messages</span>
-              <span class="float-right text-muted text-sm" id="count-minutes">3 mins</span>
+              <!-- <span class="float-right text-muted text-sm" id="count-minutes">3 mins</span> -->
             </a><a href="{{route('manager.home')}}" class="dropdown-item">
               <i class="fas fa-envelope mr-2"></i> <span id="count-message-unresolve">4 unssen messages</span>
-              <span class="float-right text-muted text-sm" id="count-minutes-unresolve">3 mins</span>
+              <!-- <span class="float-right text-muted text-sm" id="count-minutes-unresolve">3 mins</span> -->
             </a>
             @endif
             <!-- <div class="dropdown-divider"></div>
@@ -251,20 +251,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
           $("#badge-count").html(result[0]);
 
           if(result[0] == 1) {
-            $("#count-message").html(result[0] + ' unseen message');
+            $("#count-message").html(result[0] + ' unseen concern');
             $("#header-notification-count").html(result[0] + ' Notification');
 
-            $("#count-message-unresolve").html(result[2] + ' unresolve message');
+            $("#count-message-unresolve").html(result[2] + ' pending concern');
 
           } else {
-            $("#count-message").html(result[0] + ' unseen messages');
+            $("#count-message").html(result[0] + ' unseen concern');
             $("#header-notification-count").html(result[0] + ' Notifications');
 
-            $("#count-message-unresolve").html(result[2] + ' unresolve message');
+            $("#count-message-unresolve").html(result[2] + ' pending concern');
           }
 
-          $("#count-minutes").html(moment(result[1]['created_date']).fromNow());
-          $("#count-minutes-unresolve").html(moment(result[3]['created_date']).fromNow());
+          // $("#count-minutes").html(moment(result[1]['created_date']).fromNow());
+          // $("#count-minutes-unresolve").html(moment(result[3]['created_date']).fromNow());
 
         }
       });

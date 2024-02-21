@@ -39,7 +39,7 @@ class LoginController extends Controller
             ->update([
                 'last_seen' => $now->format('Y-m-d H:i:s')
             ]);
-
+            
             if (auth()->user()->type == 'admin') {
                 return redirect()->route('admin.home');
             }else if (auth()->user()->type == 'manager') {

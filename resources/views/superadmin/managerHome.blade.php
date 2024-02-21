@@ -244,7 +244,8 @@
                                     <small>
                                         <label for="message">Status</label>
                                         <select id="status" name="status"  class="form-control custom-select" required>
-                                          <option selected="" value="">Select one</option>
+                                          <option selected="" value="" disabled>Select one</option>
+                                          <option value="0">Pending</option>
                                           <option value="1">Processing</option>
                                           <option value="2">Resolved</option>
                                         </select>
@@ -330,8 +331,13 @@
 
             if(value == 1) {
                 $("#remarks-div").removeAttr('hidden');
+                $("#action-taken").removeAttr('readonly');
             } else if(value == 2) {
                 $("#remarks-div").removeAttr('hidden');
+                $("#action-taken").removeAttr('readonly');
+            } else if(value == 0) {
+                $("#remarks-div").removeAttr('hidden');
+                $("#action-taken").removeAttr('readonly');
             } else {
                 $("#remarks-div").attr('hidden', 'hidden');
                 $("#btn-resolve").attr('disabled', 'disabled');
@@ -409,7 +415,7 @@
             ],
             'columnDefs' : [
                 //hide the second & fourth column
-                { 'visible': false, 'targets': [6, 9, 10] }
+                { 'visible': false, 'targets': [3, 6, 9, 10] }
             ],
             dom: 'Bfrtip',
             buttons: [
@@ -426,6 +432,7 @@
             var ticket = $("#ticket-number").text();
             var action = $("#action-taken").val();
             var id = $("#ticket-id").val();
+            var status = $("#status").val();
 
             $.ajax({
                 url: "{{route('/resolve-ticket')}}",
@@ -434,6 +441,7 @@
                     id : id,
                     ticket : ticket,
                     action : action,
+                    status : status,
                     _token: '{{csrf_token()}}',
                 },
                 beforeSend: function () {
@@ -489,6 +497,7 @@
 
             },
             success: function (result) {
+                console.log(result);
                 $("#ticket-id").val(result['id']);
                 $("#ticket-number").html(result['ticket_number']);
                 $("#client-name").val(result['client_name']);
@@ -562,11 +571,13 @@
                             } else {
                                 var status = '<span class="badge badge-warning">Pending</span>';
                             }   
+                            var date = value['date'] + ' ' + value['time'];
+
                             details = `<tr>
                                             <td><small>`+value['ticket_number']+`</small></td>
                                             <td><small>`+status+`</small></td>
                                             <td><small>`+value['remarks']+`</small></td>
-                                            <td><small>`+value['date']+`</small></td>
+                                            <td><small>`+moment(date).format('LLL')+`</small></td>
                                         <tr>`;
                             $("#history-list-body").append(details);
                         });

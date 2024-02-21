@@ -3,32 +3,31 @@
 
 @section('content')
 <div class="row justify-content-center">
-          <!-- /.col -->
-          <div class="col-md-10">
-            <div class="card">
-              <div class="card-header p-2">
-                <ul class="nav nav-pills">
-                  <li class="nav-item"><a class="nav-link active" href="#settings" data-toggle="tab">Settings</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#change-password" data-toggle="tab">Password</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Timeline</a></li>
-                </ul>
-              </div><!-- /.card-header -->
-              <div class="card-body">
-                <div class="tab-content">
-                  <!-- /.tab-pane -->
-                  <div class="tab-pane" id="timeline">
-                    <!-- The timeline -->
-                    <div class="timeline" id="timeline-data">
+  <!-- /.col -->
+  <div class="col-md-10">
+    <div class="card">
+      <div class="card-header p-2">
+        <ul class="nav nav-pills">
+          <li class="nav-item"><a class="nav-link active" href="#settings" data-toggle="tab">Settings</a></li>
+          <li class="nav-item"><a class="nav-link" href="#change-password" data-toggle="tab">Password</a></li>
+          <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Timeline</a></li>
+        </ul>
+      </div><!-- /.card-header -->
+      <div class="card-body">
+        <div class="tab-content">
+          <!-- /.tab-pane -->
+          <div class="tab-pane" id="timeline">
+            <!-- The timeline -->
+            <div class="timeline" id="timeline-data">
+            </div>
+          </div>
+          <!-- /.tab-pane -->
 
-                    </div>
-                  </div>
-                  <!-- /.tab-pane -->
-
-                  <div class="tab-pane" id="change-password">
-                    <form class="form-horizontal">
-                      <div class="form-group row">
-                        <label for="inputName" class="col-sm-2 col-form-label">Old Password</label>
-                        <div class="col-sm-10">
+          <div class="tab-pane" id="change-password">
+            <form class="form-horizontal">
+              <div class="form-group row">
+                <label for="inputName" class="col-sm-2 col-form-label">Old Password</label>
+                <div class="col-sm-10">
                           <input type="password" class="form-control" id="old_password" />
                         <span class="text-danger" id="old-password-error" hidden></span>
                         </div>

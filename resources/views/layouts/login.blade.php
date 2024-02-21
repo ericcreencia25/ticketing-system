@@ -42,9 +42,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <div class="container">
       <a href="../../AdminLTE-3.2.0/index3.html" class="navbar-brand">
         <img src="../../AdminLTE-3.2.0/dist/img/emb-logo.jpg" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-light">Support Service Ticketing System | </span>
+        <span class="brand-text font-light">SSTS    |</span>
       </a>
-
       <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
