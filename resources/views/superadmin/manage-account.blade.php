@@ -12,7 +12,7 @@
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
+                <div class="card-header">{{ __('Accounts') }}</div>
                 
                 <div class="card-body">
                   <a class="btn btn-app bg-success float-right" id="add-user">
@@ -22,9 +22,10 @@
                     <table class="table" id="user-list">
                         <thead>
                             <th>Name</th>
-                            <th>User Type</th>
+                            <th>Type</th>
                             <th>Email</th>
                             <th>Last Activity</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </thead>
                     </table>
@@ -90,6 +91,18 @@
                   <option selected="" disabled="">Select one</option>
                   <option value="1">Support</option>
                   <option value="2">Admin</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="email" class="col-md-4 col-form-label text-md-end">Status</label>
+
+              <div class="col-md-6">
+                <select id="user-status" class="form-control custom-select">
+                  <option selected="" disabled="">Select one</option>
+                  <option value="1">Active</option>
+                  <option value="2">Deactivate</option>
                 </select>
               </div>
             </div>
@@ -182,13 +195,14 @@
         var email = $("#email").val();
         var user_type = $("#user-type").val();
         var user_id = $("#user-id").val();
+        var user_status = $("#user-status").val();
 
         Swal.fire({
           title: "Do you want to save the changes?",
           showDenyButton: true,
           showCancelButton: false,
-          confirmButtonText: "Save",
-          denyButtonText: `Don't save`
+          confirmButtonText: "Yes",
+          denyButtonText: `No`
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
@@ -202,6 +216,7 @@
                 email : email,
                 user_type : user_type,
                 user_id : user_id,
+                user_status : user_status,
                 _token: '{{csrf_token()}}',
               },
               beforeSend: function () {
@@ -304,6 +319,10 @@
             name: 'last_activity',
           },
           {
+            data: 'status',
+            name: 'status',
+          },
+          {
             data: 'action',
             name: 'action',
           },
@@ -317,6 +336,7 @@
           $("#last_name").val('');
           $("#email").val('');
           $("#user-type").val('');
+          $("#user-staus").val('');
               
           $("#modal-add-account").modal();
           $("#btn-add-user").html('Register');
@@ -528,9 +548,11 @@
               $("#last_name").val(result['last_name']);
               $("#email").val(result['email']);
               $("#user-type").val(result['type']);
+
+              $("#user-status").val(result['active']);
               
               $("#modal-add-account").modal();
-              $("#btn-add-user").html('Edit');
+              $("#btn-add-user").html('Save');
               $("#user-id").val(id);
             }
 

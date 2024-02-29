@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ApiController;
  
 Route::get('/', function () {
     return redirect('/contact-us');
@@ -34,7 +35,19 @@ Route::get('/email', [MessageController::class, 'email'])->name('/email');
 Route::post('/send-survey', [MessageController::class, 'sendSurvey'])->name('/send-survey');
 Route::post('/get-survey-rate', [MessageController::class, 'getSurveyRate'])->name('/get-survey-rate');
 Route::post('/get-status-count', [MessageController::class, 'getStatusCount'])->name('/get-status-count');
- 
+
+Route::get('/api/login/iis/{username}/{password}/{id_number}/{email}/{token}', [ApiController::class, 'iisLogin'])->name('iisLogin');
+Route::post('/create/iis-account', [ApiController::class, 'createIISaccount'])->name('/create/iis-account');
+Route::post('/login/iis-account', [ApiController::class, 'loginIISaccount'])->name('/login/iis-account');
+
+Route::get('/iis-confirmation', function () {
+    return view('auth.iis-confirmation');
+});
+
+Route::get('/iis-login', function () {
+    return view('auth.iis-login');
+});
+
 Auth::routes();
 
 Route::post('/get-notifications', [NotificationController::class, 'getNotifications'])->name('/get-notifications');
@@ -56,6 +69,7 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
    
     Route::get('/admin/home', [HomeController::class, 'adminHome'])->name('admin.home');
+    Route::get('/admin/survey', [HomeController::class, 'adminSurvey'])->name('admin.survey');
 });
    
 //Admin Routes List

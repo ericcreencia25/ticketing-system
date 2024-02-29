@@ -40,8 +40,17 @@ class UserController extends Controller
                 return $details;
             })
             ->addColumn('last_activity', function ($data) {
-                $details = date("Y-m-d H:i:s", strtotime($data->last_seen));
+                $details = date("M d, Y h:i a", strtotime($data->last_seen));
                 return $details;
+            })
+            ->addColumn('status', function ($data) {
+                if($data->active == 1) {
+                    $status = '<span class="badge badge-success">Active</span>';
+                } else {
+                    $status = '<span class="badge badge-danger">Deactive</span>';
+                }
+                
+                return $status;
             })
             ->addColumn('action', function ($data) {
                 $details = '<button type="button" class="btn btn-outline-secondary" onclick="editAccount('.$data->id.')"><i class="fa-solid fa-user"></i></button>';
@@ -52,7 +61,7 @@ class UserController extends Controller
 
                 return $details;
             })
-            ->rawColumns(['name', 'user_type', 'email','action'])
+            ->rawColumns(['name', 'user_type', 'email','action', 'status'])
             ->make(true);
     }
 
@@ -203,6 +212,8 @@ class UserController extends Controller
                         'name' => $name,
                         'type' => $request->user_type,
                         'email' => $request->email,
+                        'id_number' => $request->emb_id,
+                        'active' => $request->user_status,
                         'password' => Hash::make('0123456789*'),
                         'created_at' => $now->format('Y-m-d H:i:s'),
                         'updated_at' => $now->format('Y-m-d H:i:s')
@@ -252,6 +263,8 @@ class UserController extends Controller
                     'name' => $name,
                     'type' => $request->user_type,
                     'email' => $request->email,
+                    'id_number' => $request->emb_id,
+                    'active' => $request->user_status,
                     'updated_at' => $now->format('Y-m-d H:i:s')
                 ]);
 

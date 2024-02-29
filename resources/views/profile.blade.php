@@ -66,19 +66,24 @@
                       <div class="form-group row">
                         <label for="inputName" class="col-sm-2 col-form-label">Middle Name</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="middle_name" placeholder="Name" value="{{ Auth::user()->middle_name }}">
+                          <input type="text" class="form-control" id="middle_name" placeholder="Middle Name" value="{{ Auth::user()->middle_name }}">
                         </div>
                       </div>
                       <div class="form-group row">
                         <label for="inputName" class="col-sm-2 col-form-label">Last Name</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="last_name" placeholder="Name" value="{{ Auth::user()->last_name }}">
+                          <input type="text" class="form-control" id="last_name" placeholder="Last Name" value="{{ Auth::user()->last_name }}">
                         </div>
                       </div>
                       <div class="form-group row">
                         <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
                         <div class="col-sm-10">
                           <input type="email" class="form-control" id="email" placeholder="Email" value="{{ Auth::user()->email }}">
+                        </div>
+                      </div><div class="form-group row">
+                        <label for="inputEmail" class="col-sm-2 col-form-label">EMB ID</label>
+                        <div class="col-sm-10">
+                          <input type="email" class="form-control" id="emb-id" placeholder="EMB ID" value="{{ Auth::user()->id_number }}">
                         </div>
                       </div>
                       <div class="form-group row">
@@ -203,7 +208,8 @@
         var middle_name = $("#middle_name").val();
         var last_name = $("#last_name").val();
         var email = $("#email").val();
-        var user_id = '{{ Auth::user()->id }}'
+        var user_id = '{{ Auth::user()->id }}';
+        var emb_id = $("#emb-id").val();
 
         if('{{ Auth::user()->type }}' == 'admin'){
           user_type = 1;
@@ -230,6 +236,7 @@
                 email : email,
                 user_id : user_id,
                 user_type : user_type,
+                emb_id : emb_id,
                 _token: '{{csrf_token()}}',
               },
               beforeSend: function () {

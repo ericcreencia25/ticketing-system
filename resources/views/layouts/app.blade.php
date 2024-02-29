@@ -61,7 +61,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
             @endif
           </li>
           <li class="nav-item">
+            @if(Auth::user()->type == 'manager')
             <a href="{{ route('manager.survey') }}" class="nav-link">Survey</a>
+            @elseif(Auth::user()->type == 'admin')
+            <a href="{{ route('admin.survey') }}" class="nav-link">Survey</a>
+            @endif
           </li>
         </ul>
       </div>
@@ -116,7 +120,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Messages Dropdown Menu -->
         <li class="nav-item dropdown">
           <a class="nav-link" data-toggle="dropdown" href="#">
-            {{ Auth::user()->name }}
+            {{ isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->username }}
           </a>
           <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
             <a href="/profile" class="dropdown-item">

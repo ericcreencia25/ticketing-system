@@ -152,6 +152,27 @@
   </div>
 </div> -->
 
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title"></h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <center>
+                    <p>Edit your profile information first. </p>
+                    <p>Click <a href="/profile">here</a> to go to your profile.</p>
+                </center>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
 <div class="modal modal-right fade" id="right_modal_lg" tabindex="-1" role="dialog" aria-labelledby="right_modal_lg">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -291,7 +312,15 @@
 
 
 <script>
+
     $(function () {
+
+        var firstname = '{{Auth::user()->first_name}}';
+        var lastname = '{{Auth::user()->last_name}}';
+
+        if(firstname == '' && lastname == ''){
+            $("#modal-default").modal();
+        }
 
         $.ajax({
                 url: "{{route('/get-status-count')}}",

@@ -68,6 +68,11 @@ class HomeController extends Controller
         return view('superadmin.survey-list');
     }
 
+    public function adminSurvey()
+    {
+        return view('admin.survey-list');
+    }
+
 
     
 

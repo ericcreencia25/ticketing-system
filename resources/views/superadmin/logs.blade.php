@@ -163,8 +163,6 @@
 
                   $.each(value['data'], function (index, value1) {
 
-                    console.log(value1);
-
                     if(value1['user_type'] == 0 ) {
                       var timeline = `<!-- timeline item -->
                           <div>
